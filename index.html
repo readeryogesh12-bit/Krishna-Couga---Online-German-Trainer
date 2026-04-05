@@ -907,8 +907,8 @@ footer::before{content:'';display:block;height:4px;background:linear-gradient(90
           <div class="lc-title">Join the Class</div>
           <div class="lc-sub">Create your student account</div>
           <div class="form-row">
-            <div class="fg"><label>First Name</label><div class="fi"><span class="fi-ico"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg></span><input type="text" placeholder="First name"/></div></div>
-            <div class="fg"><label>Last Name</label><div class="fi"><span class="fi-ico"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg></span><input type="text" placeholder="Last name"/></div></div>
+            <div class="fg"><label>First Name</label><div class="fi"><span class="fi-ico"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg></span><input type="text" id="r-fname" placeholder="First name"/></div></div>
+            <div class="fg"><label>Last Name</label><div class="fi"><span class="fi-ico"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg></span><input type="text" id="r-lname" placeholder="Last name"/></div></div>
           </div>
           <div class="fg"><label>Email</label><div class="fi"><span class="fi-ico"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg></span><input type="email" placeholder="your@email.com"/></div></div>
           <div class="fg"><label>Phone</label><div class="fi"><span class="fi-ico"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07A19.5 19.5 0 0 1 4.69 12 19.79 19.79 0 0 1 1.61 3.5 2 2 0 0 1 3.6 1.35h3a2 2 0 0 1 2 1.72c.127.96.361 1.903.7 2.81a2 2 0 0 1-.45 2.11L7.91 9a16 16 0 0 0 6.07 6.07l.94-.94a2 2 0 0 1 2.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0 1 22 16.92z"/></svg></span><input type="tel" placeholder="+91 9XXXXXXXXX"/></div></div>
@@ -933,9 +933,9 @@ footer::before{content:'';display:block;height:4px;background:linear-gradient(90
       <div class="sb-tagline">German Language Portal</div>
     </div>
     <div class="sb-user">
-      <div class="sb-av">A</div>
+      <div class="sb-av" id="sb-av-initial">A</div>
       <div>
-        <div class="sb-uname">Ananya R.</div>
+        <div class="sb-uname" id="sb-uname">Ananya R.</div>
         <div class="sb-uid">KC2024 · Level A2</div>
       </div>
     </div>
@@ -985,7 +985,7 @@ footer::before{content:'';display:block;height:4px;background:linear-gradient(90
           90437 70488
         </div>
         <div class="dt-badge">Online Class</div>
-        <div class="sb-av" style="width:34px;height:34px;font-size:0.95rem">A</div>
+        <div class="sb-av" id="topbar-av-initial" style="width:34px;height:34px;font-size:0.95rem">A</div>
       </div>
     </div>
 
@@ -1004,7 +1004,7 @@ footer::before{content:'';display:block;height:4px;background:linear-gradient(90
           </svg>
         </div>
         <div class="ow-eye">Student Portal · Krishna Couga German Classes</div>
-        <div class="ow-title">Guten Morgen, <em>Ananya!</em> 🌸</div>
+        <div class="ow-title" id="ow-title">Guten Morgen, <em>Ananya!</em> 🌸</div>
         <div class="ow-sub">You're enrolled in A2 Elementary · 3 months course · Next class: Today at 7:00 PM via Google Meet<br>Contact your trainer: <strong style="color:var(--turmeric-light)">90437 70488</strong> · Lawspet, Pondicherry (Online Only)</div>
       </div>
 
@@ -1268,19 +1268,57 @@ function switchLoginTab(t){
 }
 
 // ── Auth ──
+let currentStudentName = 'Student';
+
+function updateDashboardName(firstName, lastInitial) {
+  currentStudentName = firstName;
+  const displayName = lastInitial ? firstName + ' ' + lastInitial + '.' : firstName;
+  const initial = firstName.charAt(0).toUpperCase();
+  const sbName = document.getElementById('sb-uname');
+  const sbAv = document.getElementById('sb-av-initial');
+  const topAv = document.getElementById('topbar-av-initial');
+  const owTitle = document.getElementById('ow-title');
+  if (sbName) sbName.textContent = displayName;
+  if (sbAv) sbAv.textContent = initial;
+  if (topAv) topAv.textContent = initial;
+  if (owTitle) owTitle.innerHTML = 'Guten Morgen, <em>' + firstName + '!</em> \u{1F338}';
+}
+
 function doLogin(){
   const id=document.getElementById('l-id')?.value.trim();
   const pw=document.getElementById('l-pw')?.value.trim();
   if(!id||!pw){toast('⚠️ Missing Fields','Please enter your ID and password.',false);return;}
+  // Check if we have a stored name from registration
+  const storedName = localStorage.getItem('kc_student_name');
+  const storedLastInit = localStorage.getItem('kc_student_last_initial');
+  if(storedName) {
+    updateDashboardName(storedName, storedLastInit);
+  } else {
+    // Use the login ID as a fallback — extract name-like part if it's an email
+    let name = id;
+    if(id.includes('@')) name = id.split('@')[0];
+    if(name.startsWith('KC') || name.startsWith('kc')) name = 'Student';
+    updateDashboardName(name, '');
+  }
   toast('✅ Login Successful','Willkommen! Loading your dashboard…');
   setTimeout(()=>showPage('dashboard'),1200);
 }
 function doRegister(){
+  const fname = document.getElementById('r-fname')?.value.trim();
+  const lname = document.getElementById('r-lname')?.value.trim();
+  if(fname) {
+    const lastInitial = lname ? lname.charAt(0).toUpperCase() : '';
+    localStorage.setItem('kc_student_name', fname);
+    localStorage.setItem('kc_student_last_initial', lastInitial);
+  }
   toast('🎉 Registered Successfully','Check WhatsApp 90437 70488 for confirmation!');
   setTimeout(()=>switchLoginTab('login'),2000);
 }
 function doGoogle(){
   toast('🔗 Redirecting…','Connecting to Google Sign-In');
+  const storedName = localStorage.getItem('kc_student_name');
+  const storedLastInit = localStorage.getItem('kc_student_last_initial');
+  if(storedName) updateDashboardName(storedName, storedLastInit);
   setTimeout(()=>showPage('dashboard'),1200);
 }
 
@@ -1289,6 +1327,10 @@ function initDashboard(){
   const now=new Date();
   const el=document.getElementById('dt-date');
   if(el)el.textContent=now.toLocaleDateString('en-IN',{weekday:'long',year:'numeric',month:'long',day:'numeric'});
+  // Restore student name from storage
+  const storedName = localStorage.getItem('kc_student_name');
+  const storedLastInit = localStorage.getItem('kc_student_last_initial');
+  if(storedName) updateDashboardName(storedName, storedLastInit);
   renderCalendar(2025,3);
   animateBars();
 }
